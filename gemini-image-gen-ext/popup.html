@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      width: 340px;
+      padding: 16px;
+      background: #1a1a2e;
+      color: #e0e0e0;
+    }
+    h2 {
+      font-size: 15px;
+      color: #a78bfa;
+      margin-bottom: 14px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+    label { font-size: 12px; color: #aaa; display: block; margin-bottom: 4px; }
+    textarea {
+      width: 100%;
+      height: 80px;
+      background: #16213e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      padding: 8px;
+      font-size: 12px;
+      resize: vertical;
+      outline: none;
+    }
+    textarea:focus { border-color: #a78bfa; }
+
+    .file-drop {
+      width: 100%;
+      min-height: 70px;
+      border: 2px dashed #444;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+      padding: 10px;
+    }
+    .file-drop:hover, .file-drop.drag-over { border-color: #a78bfa; }
+    .file-drop span { font-size: 12px; color: #888; }
+    .file-drop input { display: none; }
+
+    #file-list {
+      max-height: 160px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      font-size: 11px;
+    }
+    .file-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 3px 6px;
+      background: #16213e;
+      border-radius: 4px;
+      margin-bottom: 3px;
+    }
+    .file-item .status { margin-left: auto; font-size: 11px; }
+    .status.pending { color: #888; }
+    .status.running { color: #facc15; }
+    .status.done { color: #4ade80; }
+    .status.error { color: #f87171; }
+
+    .row { display: flex; gap: 8px; margin-bottom: 10px; }
+    .row > div { flex: 1; }
+    input[type=number] {
+      width: 100%;
+      background: #16213e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      color: #e0e0e0;
+      padding: 6px 8px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 9px;
+      border: none;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: opacity 0.2s;
+    }
+    button:disabled { opacity: 0.4; cursor: not-allowed; }
+    #btn-start { background: #a78bfa; color: #1a1a2e; margin-bottom: 6px; }
+    #btn-stop { background: #f87171; color: #1a1a2e; }
+
+    #status-bar {
+      font-size: 11px;
+      color: #888;
+      text-align: center;
+      margin-top: 8px;
+      min-height: 16px;
+    }
+    .mt { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h2>🪄 Gemini Auto Image Gen</h2>
+
+  <label>Prompt</label>
+  <textarea id="prompt" placeholder="Nhập prompt của bạn...">Gen cho tôi ảnh tương tự, thay font gần giống 90% layout thay đổi 1 chút, phong cách 2d minimalist thôi, màu sắc phải phù hợp với nội dung quote</textarea>
+
+  <div class="mt"></div>
+  <label>Chọn ảnh từ máy tính</label>
+  <div class="file-drop" id="file-drop">
+    <input type="file" id="file-input" accept="image/*" multiple />
+    <span>📁 Click hoặc kéo thả ảnh vào đây</span>
+    <span style="font-size:10px;color:#666;margin-top:2px;">hoặc Ctrl+V để dán ảnh</span>
+    <span id="file-count" style="color:#a78bfa;margin-top:4px;"></span>
+  </div>
+
+  <div id="file-list"></div>
+
+  <div class="row">
+    <div>
+      <label>Delay giữa ảnh (giây)</label>
+      <input type="number" id="delay" value="5" min="3" max="60" />
+    </div>
+    <div>
+      <label>Timeout chờ gen (giây)</label>
+      <input type="number" id="timeout" value="240" min="20" max="300" />
+    </div>
+  </div>
+
+  <button id="btn-start">▶ Bắt đầu</button>
+  <button id="btn-stop" disabled>⏹ Dừng lại</button>
+  <div id="status-bar">Chưa bắt đầu</div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

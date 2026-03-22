@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Gemini Auto Image Gen",
+  "version": "1.0.0",
+  "description": "Tự động gen ảnh hàng loạt trên Gemini từ danh sách ảnh + prompt",
+  "permissions": ["activeTab", "scripting", "downloads", "tabs", "sidePanel"],
+  "host_permissions": ["https://gemini.google.com/*"],
+  "action": {
+    "default_title": "Gemini Auto Image Gen"
+  },
+  "side_panel": {
+    "default_path": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://gemini.google.com/*"],
+      "js": ["content.js"]
+    }
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
