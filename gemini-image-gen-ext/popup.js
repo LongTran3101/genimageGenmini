@@ -91,6 +91,8 @@ function setFileStatus(index, state, text) {
   el.textContent = text;
 }
 
+const IMAGES_PER_TAB = 3;
+
 // --- Main flow ---
 btnStart.addEventListener('click', async () => {
   if (imageFiles.length === 0) { statusBar.textContent = '⚠ Chưa chọn ảnh nào!'; return; }
@@ -104,20 +106,22 @@ btnStart.addEventListener('click', async () => {
   const timeout = parseInt(timeoutEl.value) * 1000;
   const prompt = promptEl.value.trim();
 
-  // Mở tab Gemini 1 lần duy nhất cho cả batch
-  statusBar.textContent = 'Đang mở tab Gemini...';
-  try {
-    geminiTabId = await openGeminiTab();
-  } catch (err) {
-    statusBar.textContent = '❌ Không mở được tab Gemini: ' + err.message;
-    isRunning = false;
-    btnStart.disabled = false;
-    btnStop.disabled = true;
-    return;
-  }
-
   for (let i = 0; i < imageFiles.length; i++) {
     if (!isRunning) break;
+
+    // Mở tab mới mỗi IMAGES_PER_TAB ảnh
+    if (i % IMAGES_PER_TAB === 0) {
+      statusBar.textContent = `Đang mở tab Gemini mới (ảnh ${i + 1})...`;
+      try {
+        geminiTabId = await openGeminiTab();
+      } catch (err) {
+        statusBar.textContent = '❌ Không mở được tab Gemini: ' + err.message;
+        isRunning = false;
+        btnStart.disabled = false;
+        btnStop.disabled = true;
+        return;
+      }
+    }
 
     setFileStatus(i, 'running', '⏳ đang gen...');
     statusBar.textContent = `Đang xử lý ảnh ${i + 1}/${imageFiles.length}: ${imageFiles[i].name}`;
